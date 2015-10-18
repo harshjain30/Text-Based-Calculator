@@ -20,65 +20,70 @@ def enpqueue(l,c,_i,i_,p):
 	l.insert(j,(c,_i,i_,p))
 
 def opr(o,l,r):
-	if o == "=":
-		variables[l] = r
-		return True
+	try:
+		if o == "=":
+			variables[l] = r
+			return True
 
-	if o == "++":
-		if r == "":
-			post.append(o+l)
-			return variables[l]
-		elif l == "":
-			variables[r] += 1
-			return variables[r]
+		if o == "++":
+			if r == "":
+				post.append(o+l)
+				return variables[l]
+			elif l == "":
+				variables[r] += 1
+				return variables[r]
 
-	if o == "--":
-		if r == "":
-			post.append(o+l)
-			return variables[l]
-		elif l == "":
-			variables[r] -= 1
-			return variables[r]
-	
-	if type(r) is str:
-		r = variables[r]
-	if o == "*=":
-		variables[l] *= r
-		return True
-	if o == "/=":
-		variables[l] /= r
-		return True
-	if o == "+=":
-		variables[l] += r
-		return True
-	if o == "-=":
-		variables[l] -= r
-		return True
-	
-	if type(l) is str:
-		l = variables[l]
-	if o == "*":
-		return l*r
-	if o == "/":
-		return l/r
-	if o == "+":
-		return l+r
-	if o == "-":
-		return l-r
+		if o == "--":
+			if r == "":
+				post.append(o+l)
+				return variables[l]
+			elif l == "":
+				variables[r] -= 1
+				return variables[r]
+		
+		if type(r) is str:
+			r = variables[r]
+		if o == "*=":
+			variables[l] *= r
+			return True
+		if o == "/=":
+			variables[l] /= r
+			return True
+		if o == "+=":
+			variables[l] += r
+			return True
+		if o == "-=":
+			variables[l] -= r
+			return True
+		
+		if type(l) is str:
+			l = variables[l]
+		if o == "*":
+			return l*r
+		if o == "/":
+			return l/r
+		if o == "+":
+			return l+r
+		if o == "-":
+			return l-r
+	except KeyError:
+		print("Invalid input")
+		exit()
 
 
 def process(st,s,e,pq):
-	if st == None: return None
-	cst = st[s:e+1].strip()
-	if cst == "": return ""
-	if isNumber(cst):
-		return num(cst)
-	elif len(cst) == 1:
-		return cst #strictly single-character variables, otherwise define variables
-	print(pq)
-	for i,t in enumerate(pq):
-		if t[1] >= s and t[2] <= e:
-			return opr(t[0],process(st,s,t[1]-1,pq[:i]+pq[i+1:]),process(st,t[2]+1,e,pq[:i]+pq[i+1:]))
+	if not pq:
+		if st == None: return None
+		cst = st[s:e+1].strip()
+		if cst == "": return ""
+		if isNumber(cst):
+			return num(cst)
+		else:
+			return cst
+	spl = pq.pop(0)
+	pql = [t for t in pq if t[1]>=s and t[2]<spl[1]]
+	pqr = [t for t in pq if t[1]>spl[2] and t[2]<=e]
+	return opr(spl[0],process(st,s,spl[1]-1,pql),process(st,spl[2]+1,e,pqr))
 
 def _process(s):
 	pq = []
