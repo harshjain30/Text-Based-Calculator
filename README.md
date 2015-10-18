@@ -6,10 +6,9 @@ This script evaluates a series of assignment operators provided as command-line 
 The following operators are valid:<br/>
 =, *=, /=, +=, -=, +, -, *, /, ++, --<br/>
 This version does not work for other operators such as (), ^, |, %, ~, etc.<br/>
-<br/>
 
 <b>Variables</b><br/>
-The variables must be strictly single-character, like <i>i</i>. The script does not work for variables such as <i>count</i>.<br/>
+The variable names can be anything as long as they don't include one of the operators and have atleast one non-numeric character other than "." (decimal point). For example: <i>i</i>, <i>count</i>, <i>#awesome</i>, <i>y2k</i>, <i>@mention</i>, <i>$%.^&</i>, etc.
 
 <b>Numbers</b><br/>
 The script does not work for negative numbers. All non-negative real numbers are okay.<br/><br/>
