@@ -1,6 +1,18 @@
-prior = {"=":1,"+=":1,"-=":1,"+":2,"-":2,"*":3,"/":3,"++":4,"--":4}
+prior = {"=":1,"*=":1,"/=":1,"+=":1,"-=":1,"+":2,"-":2,"*":3,"/":3,"++":4,"--":4}
 variables = {}
 post = []
+
+def isNumber(s):
+	for c in s:
+		if not (c.isdigit() or c=="."):
+			return False
+	return True
+
+def num(s):
+	try:
+		return int(s)
+	except ValueError:
+		return float(s)
 
 def enpqueue(l,c,_i,i_,p):
 	j = 0
@@ -8,8 +20,6 @@ def enpqueue(l,c,_i,i_,p):
 	l.insert(j,(c,_i,i_,p))
 
 def opr(o,l,r):
-	print(o,l,r)
-
 	if o == "=":
 		variables[l] = r
 		return True
@@ -17,7 +27,6 @@ def opr(o,l,r):
 	if o == "++":
 		if r == "":
 			post.append(o+l)
-			#print(post)
 			return variables[l]
 		elif l == "":
 			variables[r] += 1
@@ -33,6 +42,12 @@ def opr(o,l,r):
 	
 	if type(r) is str:
 		r = variables[r]
+	if o == "*=":
+		variables[l] *= r
+		return True
+	if o == "/=":
+		variables[l] /= r
+		return True
 	if o == "+=":
 		variables[l] += r
 		return True
@@ -52,13 +67,12 @@ def opr(o,l,r):
 		return l-r
 
 
-
 def process(st,s,e,pq):
 	if st == None: return None
 	cst = st[s:e+1].strip()
 	if cst == "": return ""
-	if cst.isdigit():
-		return int(cst)
+	if isNumber(cst):
+		return num(cst)
 	elif len(cst) == 1:
 		return cst #strictly single-character variables, otherwise define variables
 	print(pq)
@@ -67,11 +81,9 @@ def process(st,s,e,pq):
 			return opr(t[0],process(st,s,t[1]-1,pq[:i]+pq[i+1:]),process(st,t[2]+1,e,pq[:i]+pq[i+1:]))
 
 def _process(s):
-	#print(s)
 	pq = []
 	i = 0
 	n = len(s)
-	#if s[0] not in prior: variables[s[0]] = 0
 	while i < n:
 		c = s[i]
 		if c in prior:
